@@ -18,12 +18,12 @@
 		<module>fiap-hackaton-controle-servicos</module>
 		<module>fiap-hackaton-estabelecimento-saude</module>
 		<module>fiap-hackaton-estoque</module>
-		<module>fiap-hackaton-gateway</module>
+		<module>fiap-hackaton-eureka</module>
 		<module>fiap-hackaton-insumos</module>
 		<module>fiap-hackaton-inteligencia</module>
 		<module>fiap-hackaton-movimentacoes</module>
 		<module>fiap-hackaton-notificacao-insumos</module>
-		<module>fiap-hackaton-notificacao-insumos-consumer</module>
+		<module>fiap-hackaton-notificacao-insumos-consumer-service</module>
 		<module>fiap-hackaton-usuarios</module>
 	</modules>
 	

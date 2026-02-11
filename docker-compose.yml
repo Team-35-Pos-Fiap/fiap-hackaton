@@ -18,49 +18,87 @@ services:
     networks:
       - gerenciamento-insumos-net
 
-  controle-servicos:
+  eureka-service:
     platform: linux/amd64
-    build: ./fiap-hackaton-controle-servicos
-    container_name: controle-servicos
+    build: ./fiap-hackaton-eureka
+    container_name: eureka-service
     ports:
       - "8761:8761"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - gerenciamento-insumos-net
 
-  gateway:
+  controle-requisicao-service:
     platform: linux/amd64
-    build: ./fiap-hackaton-gateway
-    container_name: gateway
+    build: ./fiap-hackaton-controle-servicos
+    container_name: controle-requisicao-service
     ports:
-      - "8080:8080"
+      - "8083:8083"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
+      eureka-service:
+        condition: service_healthy
     networks:
       - gerenciamento-insumos-net
 
-  usuarios-service:
+  hackaton-usuarios:
     platform: linux/amd64
     build: ./fiap-hackaton-usuarios
-    container_name: usuarios-service
+    container_name: hackaton-usuarios
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
+      eureka-service:
+        condition: service_healthy
     networks:
       - gerenciamento-insumos-net
 
-  unidades-service:
+  estabelecimento-saude:
     platform: linux/amd64
     build: ./fiap-hackaton-estabelecimento-saude
-    container_name: unidades-service
+    container_name: estabelecimento-saude-service
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
+      eureka-service:
+        condition: service_healthy
+      hackaton-usuarios:
+        condition: service_started
+    networks:
+      - gerenciamento-insumos-net
+
+  insumos:
+    platform: linux/amd64
+    build: ./fiap-hackaton-insumos
+    container_name: insumos
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      eureka-service:
+        condition: service_healthy
+    networks:
+      - gerenciamento-insumos-net
+
+  movimentacao-service:
+    platform: linux/amd64
+    build: ./fiap-hackaton-movimentacoes
+    container_name: movimentacao-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      eureka-service:
+        condition: service_healthy
     networks:
       - gerenciamento-insumos-net
 
@@ -69,22 +107,17 @@ services:
     build: ./fiap-hackaton-estoque
     container_name: estoque-service
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
-    networks:
-      - gerenciamento-insumos-net
-
-  insumos-service:
-    platform: linux/amd64
-    build: ./fiap-hackaton-insumos
-    container_name: insumos-service
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - controle-servicos
+      eureka-service:
+        condition: service_healthy
+      estabelecimento-saude:
+        condition: service_started
+      insumos:
+        condition: service_started
+      movimentacao-service:
+        condition: service_started
     networks:
       - gerenciamento-insumos-net
 
@@ -93,22 +126,19 @@ services:
     build: ./fiap-hackaton-inteligencia
     container_name: inteligencia-service
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
-    networks:
-      - gerenciamento-insumos-net
-
-  movimentacoes-service:
-    platform: linux/amd64
-    build: ./fiap-hackaton-movimentacoes
-    container_name: movimentacoes-service
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - controle-servicos
+      eureka-service:
+        condition: service_healthy
+      movimentacao-service:
+        condition: service_started
+      estoque-service:
+        condition: service_started
+      estabelecimento-saude:
+        condition: service_started
+      insumos:
+        condition: service_started
     networks:
       - gerenciamento-insumos-net
 
@@ -120,8 +150,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
-      - insumos-service
+      - eureka-service
       - inteligencia-service
       - kafka
     networks:
@@ -129,13 +158,13 @@ services:
 
   notificacoes-service-consumer:
     platform: linux/amd64
-    build: ./fiap-hackaton-notificacao-insumos-consumer
+    build: ./fiap-hackaton-notificacao-insumos-consumer-service
     container_name: notificacoes-service-consumer
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - controle-servicos
+      - eureka-service
       - notificacoes-service
       - kafka
     networks:
