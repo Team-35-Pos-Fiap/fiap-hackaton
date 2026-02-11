@@ -25,3 +25,6 @@
 [submodule "fiap-hackaton-notificacao-insumos"]
 	path = fiap-hackaton-notificacao-insumos
 	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-notificacao-insumos.git
+[submodule "fiap-hackaton-notificacao-insumos-consumer-service"]
+	path = fiap-hackaton-notificacao-insumos-consumer-service
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-notificacao-insumos-consumer-service.git
