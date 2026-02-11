@@ -4,3 +4,24 @@
 [submodule "fiap-hackaton-controle-servicos"]
 	path = fiap-hackaton-controle-servicos
 	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-controle-servicos.git
+[submodule "fiap-hackaton-estabelecimento-saude"]
+	path = fiap-hackaton-estabelecimento-saude
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-estabelecimento-saude.git
+[submodule "fiap-hackaton-estoque"]
+	path = fiap-hackaton-estoque
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-estoque.git
+[submodule "fiap-hackaton-insumos"]
+	path = fiap-hackaton-insumos
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-insumos.git
+[submodule "fiap-hackaton-usuarios"]
+	path = fiap-hackaton-usuarios
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-usuarios.git
+[submodule "fiap-hackaton-inteligencia"]
+	path = fiap-hackaton-inteligencia
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-inteligencia.git
+[submodule "fiap-hackaton-movimentacoes"]
+	path = fiap-hackaton-movimentacoes
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-movimentacoes.git
+[submodule "fiap-hackaton-notificacao-insumos"]
+	path = fiap-hackaton-notificacao-insumos
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-notificacao-insumos.git
