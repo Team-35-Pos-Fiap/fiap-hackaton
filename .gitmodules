@@ -1,0 +1,3 @@
+[submodule "fiap-hackaton-eureka"]
+	path = fiap-hackaton-eureka
+	url = https://github.com/Team-35-Pos-Fiap/fiap-hackaton-eureka.git
