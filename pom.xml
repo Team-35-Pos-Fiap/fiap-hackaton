@@ -12,20 +12,21 @@
 	<artifactId>fiap-hackaton-gerenciamento</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gerenciamento</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<description>Projeto responsável pela orquestração dos micro serviços utilizando docker.</description>
+
+	<modules>
+		<module>fiap-hackaton-controle-servicos</module>
+		<module>fiap-hackaton-estabelecimento-saude</module>
+		<module>fiap-hackaton-estoque</module>
+		<module>fiap-hackaton-gateway</module>
+		<module>fiap-hackaton-insumos</module>
+		<module>fiap-hackaton-inteligencia</module>
+		<module>fiap-hackaton-movimentacoes</module>
+		<module>fiap-hackaton-notificacao-insumos</module>
+		<module>fiap-hackaton-notificacao-insumos-consumer</module>
+		<module>fiap-hackaton-usuarios</module>
+	</modules>
+	
 	<properties>
 		<java.version>21</java.version>
 	</properties>
