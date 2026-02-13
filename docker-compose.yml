@@ -5,15 +5,15 @@ services:
     ports:
       - "9092:9092"
     environment:
-#      # Configure listeners for both docker and host communication
+      #      # Configure listeners for both docker and host communication
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-#      # Settings required for KRaft mode
+      #      # Settings required for KRaft mode
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
-#      # Required for a single node cluster
+      #      # Required for a single node cluster
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - gerenciamento-insumos-net
@@ -142,31 +142,22 @@ services:
     networks:
       - gerenciamento-insumos-net
 
-  notificacoes-service:
+  notificacao-insumos:
     platform: linux/amd64
     build: ./fiap-hackaton-notificacao-insumos
-    container_name: notificacoes-service
+    container_name: notificacao-insumos
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      - eureka-service
-      - inteligencia-service
-      - kafka
-    networks:
-      - gerenciamento-insumos-net
-
-  notificacoes-service-consumer:
-    platform: linux/amd64
-    build: ./fiap-hackaton-notificacao-insumos-consumer-service
-    container_name: notificacoes-service-consumer
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://controle-servicos:8761/eureka
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-service
-      - notificacoes-service
-      - kafka
+      eureka-service:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      inteligencia-service:
+        condition: service_started
+      estabelecimento-saude:
+        condition: service_started
     networks:
       - gerenciamento-insumos-net
 
